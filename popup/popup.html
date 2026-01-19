@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookmark Manager</title>
+    <link rel="stylesheet" href="popup.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="w-96 h-96 bg-white">
+    <!-- Header -->
+    <div class="bg-primary-600 text-white p-3 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+            <div class="w-6 h-6 bg-white rounded flex items-center justify-center">
+                <svg class="w-4 h-4 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                    <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+            <h1 class="font-semibold text-sm">Bookmark Manager</h1>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button id="settingsBtn" class="hover:bg-primary-700 p-1 rounded transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+            </button>
+            <button id="addBookmarkBtn" class="hover:bg-primary-700 p-1 rounded transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="p-3 border-b">
+        <div class="relative">
+            <input 
+                type="text" 
+                id="searchInput" 
+                placeholder="Search bookmarks..." 
+                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+            >
+            <svg class="absolute left-3 top-2.5 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="p-3 border-b bg-gray-50">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <select id="categoryFilter" class="text-xs border border-gray-300 rounded px-2 py-1 focus:ring-1 focus:ring-primary-500">
+                    <option value="">All Categories</option>
+                </select>
+                <select id="sortFilter" class="text-xs border border-gray-300 rounded px-2 py-1 focus:ring-1 focus:ring-primary-500">
+                    <option value="dateModified">Recent</option>
+                    <option value="title">Title</option>
+                    <option value="url">URL</option>
+                    <option value="dateAdded">Date Added</option>
+                </select>
+            </div>
+            <div class="flex items-center space-x-1">
+                <button id="listViewBtn" class="p-1 rounded hover:bg-gray-200 view-btn active" data-view="list">
+                    <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                    </svg>
+                </button>
+                <button id="gridViewBtn" class="p-1 rounded hover:bg-gray-200 view-btn" data-view="grid">
+                    <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div id="statusBar" class="px-3 py-1 bg-blue-50 text-blue-700 text-xs border-b hidden">
+        <div class="flex items-center justify-between">
+            <span id="statusMessage">Loading...</span>
+            <button id="statusClose" class="hover:text-blue-900">×</button>
+        </div>
+    </div>
+
+    <!-- Bookmark List/Grid -->
+    <div id="bookmarkContainer" class="flex-1 overflow-hidden">
+        <div id="loadingSpinner" class="flex items-center justify-center h-full">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+        </div>
+        <div id="bookmarkList" class="hidden h-full overflow-y-auto">
+            <!-- Bookmarks will be populated here -->
+        </div>
+        <div id="emptyState" class="hidden h-full flex items-center justify-center text-gray-500">
+            <div class="text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">No bookmarks found</h3>
+                <p class="mt-1 text-sm text-gray-500">Start adding bookmarks to see them here</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Stats Bar -->
+    <div class="border-t bg-gray-50 px-3 py-2">
+        <div class="flex items-center justify-between text-xs text-gray-600">
+            <span id="bookmarkCount">0 bookmarks</span>
+            <div class="flex items-center space-x-3">
+                <span id="duplicateCount" class="hidden text-orange-600">0 duplicates</span>
+                <span id="brokenCount" class="hidden text-red-600">0 broken</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Templates -->
+    <div id="addBookmarkModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl w-80 max-w-sm mx-4">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-semibold">Add Bookmark</h3>
+            </div>
+            <form id="addBookmarkForm" class="p-4 space-y-3">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                    <input type="text" id="newBookmarkTitle" required class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">URL</label>
+                    <input type="url" id="newBookmarkUrl" required class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Description (optional)</label>
+                    <textarea id="newBookmarkDescription" rows="2" class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent"></textarea>
+                </div>
+                <div class="flex items-center justify-end space-x-2 pt-2">
+                    <button type="button" id="cancelAddBookmark" class="px-3 py-2 text-sm text-gray-600 hover:text-gray-800">Cancel</button>
+                    <button type="submit" class="px-3 py-2 bg-primary-600 text-white text-sm rounded hover:bg-primary-700">Add Bookmark</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl w-80 max-w-sm mx-4 max-h-96 overflow-y-auto">
+            <div class="p-4 border-b">
+                <h3 class="text-lg font-semibold">Settings</h3>
+            </div>
+            <div class="p-4 space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-sm font-medium">Auto-categorize</div>
+                        <div class="text-xs text-gray-500">Automatically categorize new bookmarks</div>
+                    </div>
+                    <input type="checkbox" id="autoCategorize" class="form-checkbox h-4 w-4 text-primary-600">
+                </div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-sm font-medium">Auto-tag</div>
+                        <div class="text-xs text-gray-500">Suggest tags for new bookmarks</div>
+                    </div>
+                    <input type="checkbox" id="autoTag" class="form-checkbox h-4 w-4 text-primary-600">
+                </div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-sm font-medium">Check broken links</div>
+                        <div class="text-xs text-gray-500">Validate bookmark URLs</div>
+                    </div>
+                    <input type="checkbox" id="checkBrokenLinks" class="form-checkbox h-4 w-4 text-primary-600">
+                </div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-sm font-medium">Duplicate detection</div>
+                        <div class="text-xs text-gray-500">Find and highlight duplicates</div>
+                    </div>
+                    <input type="checkbox" id="duplicateDetection" class="form-checkbox h-4 w-4 text-primary-600">
+                </div>
+                <div class="pt-2 border-t">
+                    <button id="exportBookmarks" class="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
+                        Export Bookmarks
+                    </button>
+                    <button id="importBookmarks" class="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
+                        Import Bookmarks
+                    </button>
+                    <button id="cleanupBookmarks" class="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
+                        Cleanup Duplicates
+                    </button>
+                </div>
+            </div>
+            <div class="p-4 border-t flex justify-end">
+                <button id="closeSettings" class="px-4 py-2 bg-primary-600 text-white text-sm rounded hover:bg-primary-700">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="popup.js"></script>
+</body>
+</html>

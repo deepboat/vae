@@ -1,0 +1,71 @@
+{
+  "name": "intelligent-bookmark-manager",
+  "version": "1.0.0",
+  "description": "Advanced bookmark management with auto-categorization, duplicate detection, and intelligent tagging",
+  "main": "background/background.js",
+  "type": "module",
+  "scripts": {
+    "build": "npm run clean && npm run build:js && npm run build:css && npm run build:assets",
+    "build:js": "webpack --mode production --config webpack.config.js",
+    "build:css": "tailwindcss -i ./styles/main.css -o ./dist/styles/main.css --minify",
+    "build:assets": "cp -r ./assets ./dist/ && cp -r ./content ./dist/ && cp -r ./popup ./dist/ && cp manifest.json ./dist/",
+    "clean": "rm -rf ./dist",
+    "package": "cd dist && zip -r ../bookmark-manager-v1.0.0.zip .",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:e2e": "puppeteer tests/e2e",
+    "lint": "eslint ./js --ext .js --color",
+    "lint:fix": "eslint ./js --ext .js --fix",
+    "format": "prettier --write '**/*.{js,html,css,md}'",
+    "dev": "npm run build && npm run package && echo 'Extension built and packaged. Load dist/ folder in Chrome.'",
+    "watch": "concurrently \"npm run build:js -- --watch\" \"npm run build:css -- --watch\""
+  },
+  "keywords": [
+    "bookmark-manager",
+    "chrome-extension",
+    "productivity",
+    "organization",
+    "bookmark-organizer",
+    "tabs"
+  ],
+  "author": "Intelligent Bookmark Manager Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.23.0",
+    "@babel/preset-env": "^7.23.0",
+    "babel-jest": "^29.7.0",
+    "concurrently": "^8.2.0",
+    "eslint": "^8.52.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.0.3",
+    "puppeteer": "^21.4.0",
+    "tailwindcss": "^3.3.0",
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.0"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/intelligent-bookmark-manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/intelligent-bookmark-manager/issues"
+  },
+  "homepage": "https://github.com/yourusername/intelligent-bookmark-manager#readme",
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": ["<rootDir>/tests/setup.js"],
+    "moduleNameMapping": {
+      "^@/(.*)$": "<rootDir>/$1"
+    },
+    "collectCoverageFrom": [
+      "js/**/*.js",
+      "!js/**/*.test.js",
+      "!js/**/mocks/*.js"
+    ]
+  }
+}
