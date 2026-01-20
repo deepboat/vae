@@ -1,7 +1,9 @@
 // background/background.js
 import { DuplicateDetector } from './duplicate-detector.js';
-import { Categorizer } from './categorizer.js';
 import { StorageManager } from '../js/database/storage.js';
+import { BookmarkService } from '../js/services/bookmark-service.js';
+import { TagService } from '../js/services/tag-service.js';
+import { Categorizer } from '../js/services/categorizer.js';
 
 class BookmarkManagerServiceWorker {
   constructor() {
@@ -28,6 +30,8 @@ class BookmarkManagerServiceWorker {
     this.storageManager = new StorageManager();
     this.duplicateDetector = new DuplicateDetector();
     this.categorizer = new Categorizer();
+    this.tagService = new TagService();
+    this.bookmarkService = new BookmarkService();
     this.bookmarkManager = new BookmarkManagerServiceWorker();
   }
 
