@@ -1,5 +1,4 @@
 // background/background.js
-import { BookmarkManagerServiceWorker } from './bookmark-sync.js';
 import { DuplicateDetector } from './duplicate-detector.js';
 import { Categorizer } from './categorizer.js';
 import { StorageManager } from '../js/database/storage.js';
